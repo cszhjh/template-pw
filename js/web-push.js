@@ -1,6 +1,6 @@
 !(function () {
   let publicVapidKey =
-    'BKYZymBADeV_ItcbBdi4XmkeKC1SACgr4AGBmN2qK3e_PJT9QfwaWRfBjgHvT4x7kNthYT3RqleWT6G6pC2SdaU';
+    'BIptfkFCzdvUETcbaW55FYVCRJ6YtBTTmtL5uGpN-XAz8qSc7RnKVfwQln0c2JUJACC1QajKN3heCdf5RKfSuX4';
 
   window.addEventListener('load', () => {
     if ('serviceWorker' in navigator) {
