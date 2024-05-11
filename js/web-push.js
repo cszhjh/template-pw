@@ -21,27 +21,27 @@
       applicationServerKey: publicVapidKey,
     });
     console.log(subscription);
-    await fetch('https://192.168.50.227:7890/subscribe', {
-      method: 'POST',
-      body: JSON.stringify(subscription),
-      // body: JSON.stringify({
-      //   'subscription': JSON.stringify(subscription),
-      //   'promotionKey': '',
-      // }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    // await fetch('http://192.168.50.252:20010/push', {
+    // await fetch('https://192.168.50.227:7890/subscribe', {
     //   method: 'POST',
-    //   body: JSON.stringify({
-    //     'subscription': JSON.stringify(subscription),
-    //     'promotionKey': '',
-    //   }),
+    //   body: JSON.stringify(subscription),
+    //   // body: JSON.stringify({
+    //   //   'subscription': JSON.stringify(subscription),
+    //   //   'promotionKey': '',
+    //   // }),
     //   headers: {
     //     'Content-Type': 'application/json',
     //   },
     // });
+    await fetch('https://192.168.50.252:20010/push', {
+      method: 'POST',
+      body: JSON.stringify({
+        'subscription': JSON.stringify(subscription),
+        'promotionKey': '',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
 
   async function unsubscribePush() {
