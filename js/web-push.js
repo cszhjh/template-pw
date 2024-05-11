@@ -20,6 +20,7 @@
       userVisibleOnly: true,
       applicationServerKey: publicVapidKey,
     });
+    console.log(subscription);
     await fetch('https://192.168.168.222:20010/push', {
       method: 'POST',
       body: JSON.stringify({
