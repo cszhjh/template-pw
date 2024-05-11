@@ -21,7 +21,7 @@
       applicationServerKey: publicVapidKey,
     });
     console.log(subscription);
-    await fetch('https://192.168.50.252:20010:20010/push', {
+    await fetch('https://192.168.50.252:20010/push', {
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
