@@ -2,7 +2,7 @@
   "name": "Plinko Game:Plinko balls",
   "short_name": "Plinko Game:Plinko balls",
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#fff",
   "theme_color": "#000",
   "description": "",
