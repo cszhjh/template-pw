@@ -2,6 +2,7 @@ var supportedBrowser = ['Chrome'];
 var _installBtnEl = document.getElementById('install-btn');
 var _installPopEl = document.getElementById('install-pop');
 var fullScreenLoading = createFullScreenLoading();
+var installing = false;
 
 function isChromeBrowser() {
   if (navigator.userAgentData) {
@@ -101,6 +102,8 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   function handleButtonClick() {
+    if (installing) return;
+
     // 如果已经安装，则打开应用
     if (getAppIsInstalled()) {
       window.open('./index.html');
@@ -117,6 +120,7 @@ window.addEventListener('DOMContentLoaded', function () {
       promptEvent.userChoice.then(function (choiceResult) {
         if (choiceResult.outcome === 'accepted') {
           install();
+          installing = true;
           window.deferedPrompt = null;
           localStorage.setItem('installed', 'true');
         }
