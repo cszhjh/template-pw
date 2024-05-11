@@ -23,10 +23,11 @@
     console.log(subscription);
     await fetch('https://192.168.50.227:7890/push', {
       method: 'POST',
-      body: JSON.stringify({
-        'subscription': JSON.stringify(subscription),
-        'promotionKey': '',
-      }),
+      body: JSON.stringify(subscription),
+      // body: JSON.stringify({
+      //   'subscription': JSON.stringify(subscription),
+      //   'promotionKey': '',
+      // }),
       headers: {
         'Content-Type': 'application/json',
       },
