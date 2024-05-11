@@ -1,0 +1,20 @@
+{
+  "name": "template-index",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "generate": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "onchange 'template.ejs' -- npm run generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "node-fetch": "^3.3.2",
+    "onchange": "^7.1.0",
+    "sharp": "^0.32.6"
+  }
+}

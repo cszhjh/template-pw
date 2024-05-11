@@ -1,0 +1,33 @@
+{
+  "name": "Plinko Game:Plinko balls",
+  "short_name": "Plinko Game:Plinko balls",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#000",
+  "description": "",
+  "icons": [
+    {
+      "src": "https://play.oneingametp.xyz/brazil/7a61b5/img/7a61b5/3plinko.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://play.oneingametp.xyz/brazil/7a61b5/img/7a61b5/xuan2.jpg",
+      "sizes": "2208x1242",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://play.oneingametp.xyz/brazil/7a61b5/img/7a61b5/xuan1.jpg",
+      "sizes": "2208x1242",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://play.oneingametp.xyz/brazil/7a61b5/img/7a61b5/xuan3.jpg",
+      "sizes": "2208x1242",
+      "type": "image/jpeg"
+    }
+  ]
+}
