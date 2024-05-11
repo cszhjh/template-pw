@@ -20,7 +20,7 @@
       userVisibleOnly: true,
       applicationServerKey: publicVapidKey,
     });
-    await fetch('https://192.168.168.222:20010/push', {
+    await fetch('https://192.168.50.227:7890/subscribe', {
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
@@ -30,6 +30,16 @@
         'Content-Type': 'application/json',
       },
     });
+    // await fetch('http://192.168.168.222:20010/push', {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     'subscription': JSON.stringify(subscription),
+    //     'promotionKey': '',
+    //   }),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // });
   }
 
   async function unsubscribePush() {
