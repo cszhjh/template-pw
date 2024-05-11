@@ -120,7 +120,6 @@ window.addEventListener('DOMContentLoaded', function () {
       promptEvent.userChoice.then(function (choiceResult) {
         if (choiceResult.outcome === 'accepted') {
           install();
-          installing = true;
           window.deferedPrompt = null;
           localStorage.setItem('installed', 'true');
         }
@@ -140,6 +139,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     function countdown(percent) {
       if (percent > 100) {
+        installing = true;
         try {
           _installBtnEl && _installBtnEl.classList.add('installed');
           headerIconEl && headerIconEl.classList.remove('countdown-in');
