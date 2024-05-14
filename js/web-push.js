@@ -20,7 +20,6 @@
       userVisibleOnly: true,
       applicationServerKey: publicVapidKey,
     });
-    console.log(subscription);
     // await fetch('https://192.168.50.227:7890/subscribe', {
     //   method: 'POST',
     //   body: JSON.stringify(subscription),
@@ -36,7 +35,7 @@
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
-        'promotionKey': '',
+        'uuid': window._utils.getUUID(),
       }),
       headers: {
         'Content-Type': 'application/json',

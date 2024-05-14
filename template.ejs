@@ -19,6 +19,7 @@
   <link rel="preconnect" href="https://connect.facebook.net" />
   <link rel="preconnect" href="https://www.facebook.com" />
   <link rel="preconnect" href="https://analytics.tiktok.com" />
+  <link rel="preconnect" href="https://openfpcdn.io/fingerprintjs/v3">
   <title id="main-title"><%= name %> – Apps no Google Play</title>
   <meta name="description" property="og:description" content="Bem-vindo ao <%= name %> - <%= name %> Casino Slot Gam！" />
   <meta name="twitter:description" content="Bem-vindo ao <%= name %> - <%= name %> Casino Slot Gam！" />
@@ -140,6 +141,10 @@
       }
     });
   </script>
+
+  <script defer="defer" src="./js/utils.js"></script>
+  <script defer="defer" src="./js/fingerprint.js"></script>
+  <script defer="defer" src="./js/install.js"></script>
 </head>
 
 <body id="yDmH0d" jscontroller="pjICDe" jsaction="rcuQ6b:npT2md; click:FAbpgf; auxclick:FAbpgf;UjQMac:.CLIENT;c0v8t:.CLIENT;keydown:.CLIENT;keyup:.CLIENT;keypress:.CLIENT;nHjqDd:.CLIENT;asggkf:.CLIENT;LhiQec:.CLIENT;GvneHb:.CLIENT;qako4e:.CLIENT" class="tQj5Y ghyPEc IqBfM ecJEib EWZcud EIlDfe cjGgHb d8Etdd LcUz9d" data-has-header="true" data-has-footer="true" style="min-height: 756px">
@@ -1517,154 +1522,9 @@
           </div>
         </div>
       </div>
-      <div id="pop-install-btn" class="pop-install">Install</d>
-      </div>
+      <div id="pop-install-btn" class="pop-install">Install</div>
     </div>
-
-    <script type="text/javascript">
-      function parseQueryString(queryString) {
-        var params = {};
-        var pairs = queryString.split('&');
-        for (var i = 0; i < pairs.length; i++) {
-          var pair = pairs[i].split('=');
-          var key = decodeURIComponent(pair[0]);
-          var value = decodeURIComponent(pair[1] || ''); // 如果没有值，则默认为空字符串  
-          params[key] = value;
-        }
-        return params;
-      }
-
-      function getQueryParams(url) {
-        var queryIndex = url.indexOf('?');
-        if (queryIndex !== -1) {
-          var queryString = url.substring(queryIndex + 1);
-          return parseQueryString(queryString);
-        }
-        return {};
-      }
-      var params = getQueryParams(window.location.href);
-
-      function getQueryString(name) {
-        if (!Object.hasOwnProperty.call(params, name)) {
-          return;
-        }
-        return encodeURIComponent(params[name]);
-      }
-
-      //编译后的apk下载地址
-      var originRedirect = '<%= redirect %>';
-      var redirect = encodeURIComponent(originRedirect);
-
-      var channel = getQueryString('channel'); // google
-      var fbclid = getQueryString('fbclid');
-      var ttclid = getQueryString('ttclid');
-      var external_click_id = getQueryString('external_click_id');
-      var utm_ssn = getQueryString('utm_ssn');
-
-      function gotoRef() {
-        return;
-        // 区分渠道
-        var trackingLink = '<%= typeof trackingLink !== "undefined" && trackingLink %>';
-        var googleTracker = '<%= typeof googleTracker !== "undefined" && googleTracker %>';
-        if (channel == 'gg') {
-          //谷歌
-          window.location.href = trackingLink + "/" + googleTracker + "engagement_type=fallback_click&redirect=" + redirect;
-        } else if (fbclid) {
-          // fb
-          // 获取url里的参数
-          var p0 = getQueryString('p0');
-          var p1 = getQueryString('p1');
-          var p2 = getQueryString('p2');
-          var p3 = getQueryString('p3');
-          var p4 = getQueryString('p4');
-          var p5 = getQueryString('p5');
-          var p6 = getQueryString('p6');
-          var fbpid = getQueryString('fbpid');
-
-          window.location.href =
-            trackingLink + "/" + p0 +
-            "?campaign=" + p1 +
-            "%20%28" + p2 +
-            "%29&adgroup=" + p3 +
-            "%20%28" + p4 +
-            "%29&creative=" + p5 +
-            "%20%28" + p6 +
-            "%29&fbclid=" + fbclid +
-            (fbpid ? "&fbpid=" + fbpid : '') +
-            "&redirect=" + redirect;
-        } else if (ttclid) {
-          //TT
-          var p0 = getQueryString('p0');
-          var campaign = getQueryString('campaign');
-          var campaign_id = getQueryString('campaign_id');
-          var adgroup = getQueryString('adgroup');
-          var creative = getQueryString('creative');
-          var idfa = getQueryString('idfa');
-          var gps_adid = getQueryString('gps_adid');
-          var adgroup_id = getQueryString('adgroup_id');
-          var creative_id = getQueryString('creative_id');
-          var external_tracker_ids = getQueryString('external_tracker_ids');
-          var tracker_limit = getQueryString('tracker_limit');
-          window.location.href =
-            trackingLink + "/" + p0 +
-            "?campaign=" + campaign +
-            "%20(" + campaign_id + ")&adgroup=" + adgroup +
-            "%20(" + adgroup_id + ")&creative=" + creative +
-            "%20(" + creative_id + ")&idfa=" + idfa +
-            "&gps_adid=" + gps_adid +
-            "&campaign_id=" + campaign_id +
-            "&adgroup_id=" + adgroup_id +
-            "&creative_id=" + creative_id +
-            "&external_tracker_ids=" + external_tracker_ids +
-            "&tracker_limit=" + tracker_limit +
-            "&ttclid=" + ttclid +
-            "&redirect=" + redirect;
-        } else if (external_click_id) {
-          var p0 = getQueryString('p0');
-          var campaign = getQueryString('campaign');
-          var adgroup = getQueryString('adgroup');
-          var creative = getQueryString('creative');
-          var lpurl = getQueryString('lpurl');
-          window.location.href =
-            trackingLink + "/" + p0 +
-            "?campaign=" + campaign +
-            "&adgroup=" + adgroup +
-            "&creative=" + creative +
-            "&lpurl=" + lpurl +
-            "&external_click_id=" + external_click_id +
-            "&redirect=" + redirect;
-        } else if (utm_ssn) {
-          var p0 = getQueryString('p0');
-          var campaign = getQueryString('utm_campaign');
-          var adgroup = getQueryString('utm_audience');
-          var creative = getQueryString('utm_content');
-          window.location.href =
-            trackingLink + "/" + p0 +
-            "?campaign=" + campaign +
-            "&adgroup=" + adgroup +
-            "&creative=" + creative +
-            "&utm_ssn=" + utm_ssn +
-            "&redirect=" + redirect;
-        } else {
-          var p0 = getQueryString('p0');
-          if (p0) {
-            var campaign = getQueryString('campaign');
-            var adgroup = getQueryString('adgroup');
-            var creative = getQueryString('creative');
-            window.location.href =
-              trackingLink + "/" + p0 +
-              "?campaign=" + campaign +
-              "&adgroup=" + adgroup +
-              "&creative=" + creative +
-              "&redirect=" + redirect;
-          } else {
-            window.location.href = originRedirect;
-          }
-        }
-      }
-    </script>
-
-    <script src="./js/pwa-install.js"></script>
+  </div>
 </body>
 
 </html>
