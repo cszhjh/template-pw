@@ -39,18 +39,14 @@
         try {
           installBtnEl && installBtnEl.classList.add('installed');
           headerIconEl && headerIconEl.classList.remove('countdown-in');
-        } catch (error) {
-          //
-        }
+        } catch (error) {}
         return;
       }
 
       try {
         progressEl.innerHTML = percent + '%';
         countdownNumEl.innerHTML = 10 - Math.floor(percent / 10);
-      } catch (error) {
-        //
-      }
+      } catch (error) {}
 
       setTimeout(function () {
         countdown(percent + 1);

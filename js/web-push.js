@@ -13,7 +13,11 @@
   });
 
   async function registerServiceWorker() {
-    const register = await navigator.serviceWorker.register('service-worker.js');
+    const [register] = await Promise.all([
+      navigator.serviceWorker.register('service-worker.js'),
+      navigator.serviceWorker.ready,
+    ]);
+
     //  详细： https://github.com/web-push-libs/web-push#using-vapid-key-for-applicationserverkey
     // 需要开启 vpn，否则会被墙导致一直处于 pending 状态
     const subscription = await register.pushManager.subscribe({

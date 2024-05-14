@@ -40,7 +40,7 @@
   <!-- TT Pixel Code -->
   <% if (typeof ttPixelId !== 'undefined') { %>
   <script>
-    ! function(w, d, t) {
+    !(function(w, d, t) {
       w.TiktokAnalyticsObject = t;
       var ttq = w[t] = w[t] || [];
       ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function(t, e) {
@@ -60,10 +60,9 @@
         e = document.getElementsByTagName("script")[0];
         e.parentNode.insertBefore(n, e)
       };
-
       ttq.load('<%= ttPixelId %>');
       ttq.page();
-    }(window, document, 'ttq');
+    })(window, document, 'ttq');
   </script>
   <% } %>
 
