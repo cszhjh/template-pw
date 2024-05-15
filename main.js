@@ -41,11 +41,27 @@ async function transformManifest() {
       },
     ]);
 
-  manifest.screenshots = gameImgsInfo.filter(Boolean).map(({ width, height, ext }, index) => ({
-    src: gameImgs[index],
-    sizes: `${width}x${height}`,
-    type: ext && `image/${ext}`,
-  }));
+  manifest.screenshots = gameImgsInfo
+    .filter(img => {
+      if (!img) return false;
+      const { width, height, ext = '' } = img;
+      if (
+        width < 320 ||
+        width > 3840 ||
+        height < 320 ||
+        height > 3840 ||
+        Math.max(width, height) > Math.min(width, height) * 2.3 ||
+        !['jpg', 'jpeg', 'png'].includes(ext.toLocaleLowerCase())
+      ) {
+        return false;
+      }
+      return true;
+    })
+    .map(({ width, height, ext }, index) => ({
+      src: gameImgs[index],
+      sizes: `${width}x${height}`,
+      type: ext && `image/${ext}`,
+    }));
 
   fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
 }
