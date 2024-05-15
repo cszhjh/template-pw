@@ -58,7 +58,7 @@ const html = ejs.render(template, pageConfig);
 console.log('build starting');
 // 创建 build 文件夹, 并将运行时依赖文件移动到 build 文件夹下
 try {
-  fs.rmdirSync('./build');
+  fs.rmSync('./build', { recursive: true });
 } catch (error) {
   if (error.code !== 'ENOENT') {
     throw error;
