@@ -67,6 +67,7 @@ try {
 fs.mkdirSync('./build');
 fs.copyFileSync('./manifest.json', './build/manifest.json');
 fs.copyFileSync('./service-worker.js', './build/service-worker.js');
+fs.copyFileSync('./index.html', './build/index.html');
 fs.writeFileSync('./build/install.html', html, 'utf-8');
 copyDir('./css', './build/css');
 copyDir('./img', './build/img');
