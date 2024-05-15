@@ -1,0 +1,199 @@
+.Il7kR .header-icon {
+  position: relative;
+  box-shadow: none;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (min-width: 840px) {
+  .Il7kR .header-icon {
+    display: none;
+  }
+}
+
+.Il7kR .header-icon img {
+  width: 100%;
+  margin: 0;
+}
+
+.header-icon-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 72px;
+  width: 72px;
+  z-index: 9;
+  display: none;
+}
+
+.header-icon-loading svg {
+  animation: loading-rotate 2s linear infinite;
+  color: #028760;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.header-icon-loading svg circle {
+  stroke: currentColor;
+  stroke-width: 2px;
+  stroke-linecap: round;
+  animation: loading-circular 1.5s ease-in-out infinite;
+}
+
+.install-progress {
+  display: none;
+  color: #333;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  margin-bottom: 3px;
+}
+
+#install-btn:not(.installed) {
+  height: 54px;
+}
+
+#install-btn a {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#install-btn .install-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #faff00;
+  padding: 8px;
+}
+
+#install-btn.installed .install-box {
+  display: none;
+}
+
+#install-btn .installed-text {
+  display: none;
+  font-weight: 600;
+}
+
+#install-btn.installed .installed-text {
+  display: block;
+}
+
+#install-btn .install-box .rapid {
+  display: flex;
+  align-items: center;
+}
+
+#install-btn .install-box .rapid img {
+  display: block;
+  margin-right: 4px;
+  width: 12px;
+}
+
+#install-btn .install-box .countdown {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+#header-countdown.countdown-in img {
+  width: 50%;
+  height: 50%;
+}
+
+#header-countdown.countdown-in .header-icon-loading {
+  display: block;
+}
+
+#header-countdown.countdown-in .install-progress {
+  display: block;
+}
+
+#header-countdown.countdown-in .app-developer {
+  display: none;
+}
+
+.full-screen-loading {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  min-width: 100px;
+  max-width: 70%;
+  min-height: 100px;
+  max-height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  white-space: pre-wrap;
+  z-index: 2024;
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  visibility: hidden;
+}
+
+.full-screen-loading .loading-animate-wrapper {
+  animation: loading-rotate 2s linear infinite;
+  display: flex;
+  height: 30px;
+  margin-bottom: 8px;
+  width: 30px;
+}
+
+.full-screen-loading .loading-animate-wrapper svg {
+  color: #fff;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.full-screen-loading .loading-animate-wrapper svg circle {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  animation: loading-circular 1s ease-in-out infinite;
+}
+
+.full-screen-loading .loading-text {
+  min-height: 0;
+  min-width: 100px;
+  padding: 8px 12px;
+  width: fit-content;
+}
+
+@keyframes loading-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes loading-circular {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0
+  }
+
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -40
+  }
+
+  to {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -120
+  }
+}
