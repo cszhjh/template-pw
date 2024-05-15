@@ -1,0 +1,24 @@
+name: 模板编译
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 读取仓库内容👀
+        uses: actions/checkout@v4
+
+      - name: 安装依赖⬇️
+        run: npm install
+
+      - name: 编译模板🧬
+        run: npm run generate
+
+      - name: 部署🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build

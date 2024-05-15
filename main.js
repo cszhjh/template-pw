@@ -1,11 +1,11 @@
 const ejs = require('ejs');
 const fs = require('fs');
+const path = require('path');
 const sharp = require('sharp');
 const pageConfig = require('./config/page.config.js');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const template = fs.readFileSync('./template.ejs', 'utf-8');
-
 async function getImageInfo(url) {
   if (!url) return null;
   try {
@@ -53,4 +53,34 @@ async function transformManifest() {
 transformManifest();
 
 const html = ejs.render(template, pageConfig);
-fs.writeFileSync('./install.html', html, 'utf-8');
+
+/** build actions */
+console.log('build starting');
+// 创建 build 文件夹, 并将运行时依赖文件移动到 build 文件夹下
+fs.rmdirSync('./build');
+fs.mkdirSync('./build');
+fs.copyFileSync('./manifest.json', './build/manifest.json');
+fs.copyFileSync('./service-worker.js', './build/service-worker.js');
+fs.writeFileSync('./build/install.html', html, 'utf-8');
+copyDir('./css', './build/css');
+copyDir('./img', './build/img');
+copyDir('./js', './build/css');
+// 将模板生成到 build 文件夹下
+console.log('build success');
+
+function copyDir(originPath, targetPath) {
+  fs.mkdirSync(targetPath, { recursive: true });
+
+  const files = fs.readdirSync(originPath);
+  files.forEach(file => {
+    const originFilePath = path.join(originPath, file);
+    const targetFilePath = path.join(targetPath, file);
+
+    const stats = fs.statSync(originFilePath);
+    if (stats.isDirectory()) {
+      copyDir(originFilePath, targetFilePath);
+    } else {
+      fs.copyFileSync(originFilePath, targetFilePath);
+    }
+  });
+}
