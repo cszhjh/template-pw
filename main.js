@@ -73,6 +73,8 @@ const html = ejs.render(template, pageConfig);
 /** build actions */
 console.log('build starting');
 // 创建 build 文件夹, 并将运行时依赖文件移动到 build 文件夹下
+const buildPath = './build';
+
 try {
   fs.rmSync('./build', { recursive: true });
 } catch (error) {
@@ -81,13 +83,11 @@ try {
   }
 }
 fs.mkdirSync('./build');
-fs.copyFileSync('./manifest.json', './build/manifest.json');
-fs.copyFileSync('./service-worker.js', './build/service-worker.js');
-fs.copyFileSync('./index.html', './build/index.html');
-fs.writeFileSync('./build/install.html', html, 'utf-8');
-copyDir('./css', './build/css');
-copyDir('./img', './build/img');
-copyDir('./js', './build/css');
+fs.writeFileSync(`${buildPath}/install.html`, html, 'utf-8');
+['./manifest.json', './service-worker.js', './index.html'].forEach(path =>
+  fs.copyFileSync(path, `${buildPath}/${path}`),
+);
+['./css', './img', './js'].forEach(path => copyDir(path, `${buildPath}/${path}`));
 // 将模板生成到 build 文件夹下
 console.log('build success');
 
