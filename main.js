@@ -57,7 +57,13 @@ const html = ejs.render(template, pageConfig);
 /** build actions */
 console.log('build starting');
 // 创建 build 文件夹, 并将运行时依赖文件移动到 build 文件夹下
-fs.rmdirSync('./build');
+try {
+  fs.rmdirSync('./build');
+} catch (error) {
+  if (error.code !== 'ENOENT') {
+    throw error;
+  }
+}
 fs.mkdirSync('./build');
 fs.copyFileSync('./manifest.json', './build/manifest.json');
 fs.copyFileSync('./service-worker.js', './build/service-worker.js');
