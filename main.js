@@ -30,7 +30,7 @@ async function transformManifest() {
   const manifestFilename = path.resolve(__dirname, 'manifest.json');
   const manifest = await fs.promises.readFile(manifestFilename, 'utf-8');
   const manifestJson = JSON.parse(manifest);
-  const [iconInfo, gameImgsInfo] = await Promise.all([icon, ...gameImgs.map(getImageInfo)]);
+  const [iconInfo, ...gameImgsInfo] = await Promise.all([icon, ...gameImgs.map(getImageInfo)]);
 
   manifestJson.name = manifestJson.short_name = name;
   iconInfo &&
@@ -76,10 +76,18 @@ async function transformManifest() {
 async function writeFileToTheBuildFolder(filename, content) {
   console.log('---- 向 build 文件夹中写入文件: ', filename, ' ----');
   const targetFilename = path.resolve(buildFolderPath, filename);
+  console.log(targetFilename);
   await fs.promises.writeFile(targetFilename, content, 'utf-8');
 }
 
-async function copyFilesToTheBuildFolder(dirname) {
+async function copyFileToTheBuildFolder(filename) {
+  console.log('---- 向 build 文件夹写入文件: ', filename, ' ----');
+  const originDirname = path.resolve(__dirname, filename);
+  const targetFilename = path.resolve(buildFolderPath, filename);
+  await fs.promises.copyFile(originDirname, targetFilename);
+}
+
+async function copyDirToTheBuildFolder(dirname) {
   console.log('---- 向 build 文件夹写入文件夹内容: ', dirname, ' ----');
   const originDirname = path.resolve(__dirname, dirname);
   const targetDirname = path.resolve(buildFolderPath, dirname);
@@ -89,9 +97,9 @@ async function copyFilesToTheBuildFolder(dirname) {
   return files?.map(async filename => {
     const originFilename = path.resolve(originDirname, filename);
     const targetFilename = path.resolve(targetDirname, filename);
-    const stat = await fs.promises.stat(targetFilename);
+    const stat = await fs.promises.stat(originFilename);
     if (stat.isDirectory()) {
-      await copyFilesToTheBuildFolder(originFilename);
+      await copyDirToTheBuildFolder(originFilename);
     } else {
       await fs.promises.copyFile(originFilename, targetFilename);
     }
@@ -101,7 +109,7 @@ async function copyFilesToTheBuildFolder(dirname) {
 (async function () {
   const templateFilename = path.resolve(__dirname, 'template.ejs');
   const webPushFilename = path.resolve(__dirname, 'js/web-push.js');
-  const staticResources = ['service-worker.js', 'css', 'img', 'js', 'game'];
+  const staticResources = ['css', 'img', 'js', 'game'];
 
   const [htmlTemplate, webPushTemplate, manifestJson] = await Promise.all([
     fs.promises.readFile(templateFilename, 'utf-8'),
@@ -112,6 +120,7 @@ async function copyFilesToTheBuildFolder(dirname) {
   // 渲染模板
   const installHtml = ejs.render(htmlTemplate, pageConfig);
   const webPushJs = ejs.render(webPushTemplate, pageConfig);
+  console.log(webPushJs);
 
   /** build actions */
   console.log('build starting');
@@ -129,11 +138,11 @@ async function copyFilesToTheBuildFolder(dirname) {
 
   console.log('---- 创建新的 build 文件夹 ----');
   await fs.promises.mkdir(buildPath);
-
+  await Promise.all(staticResources.map(filename => copyDirToTheBuildFolder(filename)));
   await Promise.all([
     writeFileToTheBuildFolder('install.html', installHtml),
-    writeFileToTheBuildFolder('web-push.js', webPushJs),
+    writeFileToTheBuildFolder('js/web-push.js', webPushJs),
     writeFileToTheBuildFolder('manifest.json', JSON.stringify(manifestJson)),
-    staticResources.map(filename => copyFilesToTheBuildFolder(filename)),
+    copyFileToTheBuildFolder('service-worker.js'),
   ]);
 })();
