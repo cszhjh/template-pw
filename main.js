@@ -13,7 +13,6 @@ async function getImageInfo(url) {
     const response = await fetch(url);
     const buffer = await response.arrayBuffer();
     const { width, height, format } = await sharp(buffer).metadata();
-
     return {
       width,
       height,
@@ -30,7 +29,10 @@ async function transformManifest() {
   const manifestFilename = path.resolve(__dirname, 'manifest.json');
   const manifest = await fs.promises.readFile(manifestFilename, 'utf-8');
   const manifestJson = JSON.parse(manifest);
-  const [iconInfo, ...gameImgsInfo] = await Promise.all([icon, ...gameImgs.map(getImageInfo)]);
+  const [iconInfo, ...gameImgsInfo] = await Promise.all([
+    getImageInfo(icon),
+    ...gameImgs.map(getImageInfo),
+  ]);
 
   manifestJson.name = manifestJson.short_name = name;
   iconInfo &&
@@ -76,7 +78,6 @@ async function transformManifest() {
 async function writeFileToTheBuildFolder(filename, content) {
   console.log('---- 向 build 文件夹中写入文件: ', filename, ' ----');
   const targetFilename = path.resolve(buildFolderPath, filename);
-  console.log(targetFilename);
   await fs.promises.writeFile(targetFilename, content, 'utf-8');
 }
 
@@ -120,7 +121,6 @@ async function copyDirToTheBuildFolder(dirname) {
   // 渲染模板
   const installHtml = ejs.render(htmlTemplate, pageConfig);
   const webPushJs = ejs.render(webPushTemplate, pageConfig);
-  console.log(webPushJs);
 
   /** build actions */
   console.log('build starting');
