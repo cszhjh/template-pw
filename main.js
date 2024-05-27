@@ -100,7 +100,7 @@ async function copyDirToTheBuildFolder(dirname) {
     const targetFilename = path.resolve(targetDirname, filename);
     const stat = await fs.promises.stat(originFilename);
     if (stat.isDirectory()) {
-      await copyDirToTheBuildFolder(originFilename);
+      await copyDirToTheBuildFolder(path.join(dirname, filename));
     } else {
       await fs.promises.copyFile(originFilename, targetFilename);
     }
