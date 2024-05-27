@@ -1,7 +1,7 @@
 {
   "name": "Plinko Game:Plinko balls",
   "short_name": "Plinko Game:Plinko balls",
-  "start_url": "./index.html",
+  "start_url": "./game/index.html",
   "display": "fullscreen",
   "background_color": "#fff",
   "theme_color": "#000",

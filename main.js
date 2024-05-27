@@ -1,11 +1,12 @@
-const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
+const ejs = require('ejs');
 const sharp = require('sharp');
-const pageConfig = require('./config/page.config.js');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+const pageConfig = require('./config/page.config.js');
 
-const template = fs.readFileSync('./template.ejs', 'utf-8');
+const buildFolderPath = path.resolve(__dirname, 'build');
+
 async function getImageInfo(url) {
   if (!url) return null;
   try {
@@ -26,14 +27,14 @@ async function getImageInfo(url) {
 
 async function transformManifest() {
   const { name, icon, gameImgs } = pageConfig;
-  const manifest = JSON.parse(fs.readFileSync('./manifest.json', 'utf-8'));
-  const iconInfo = await getImageInfo(icon);
-  const gameImgsInfo = await Promise.all(gameImgs.map(getImageInfo));
+  const manifestFilename = path.resolve(__dirname, 'manifest.json');
+  const manifest = await fs.promises.readFile(manifestFilename, 'utf-8');
+  const manifestJson = JSON.parse(manifest);
+  const [iconInfo, gameImgsInfo] = await Promise.all([icon, ...gameImgs.map(getImageInfo)]);
 
-  manifest.name = manifest.short_name = name;
-
+  manifestJson.name = manifestJson.short_name = name;
   iconInfo &&
-    (manifest.icons = [
+    (manifestJson.icons = [
       {
         src: icon,
         sizes: `${iconInfo.width}x${iconInfo.height}`,
@@ -41,21 +42,27 @@ async function transformManifest() {
       },
     ]);
 
-  manifest.screenshots = gameImgsInfo
+  manifestJson.screenshots = gameImgsInfo
     .filter(img => {
       if (!img) return false;
       const { width, height, ext = '' } = img;
-      if (
-        width < 320 ||
-        width > 3840 ||
-        height < 320 ||
-        height > 3840 ||
-        Math.max(width, height) > Math.min(width, height) * 2.3 ||
-        !['jpg', 'jpeg', 'png'].includes(ext.toLocaleLowerCase())
-      ) {
-        return false;
-      }
-      return true;
+
+      /**
+          宽度和高度必须介于 320 像素到 3840 像素之间。
+          最大尺寸不能超过最小尺寸长度的 2.3 倍。
+          与相应设备规格匹配的所有屏幕截图都必须具有相同的宽高比。
+          从 Chrome 109 开始，桌面设备上只会显示 form_factor 设置为 "wide" 的屏幕截图。
+          从 Chrome 109 开始，在 Android 设备上将忽略 form_factor 设置为 "wide" 的屏幕截图。
+          为了向后兼容，系统仍会显示不含 form_factor 的屏幕截图。
+         */
+      return (
+        width >= 320 &&
+        width <= 3840 &&
+        height >= 320 &&
+        height <= 3840 &&
+        Math.max(width, height) <= Math.min(width, height) * 2.3 &&
+        ['jpg', 'jpeg', 'png'].includes(ext.toLocaleLowerCase())
+      );
     })
     .map(({ width, height, ext }, index) => ({
       src: gameImgs[index],
@@ -63,47 +70,70 @@ async function transformManifest() {
       type: ext && `image/${ext}`,
     }));
 
-  fs.writeFileSync('./manifest.json', JSON.stringify(manifest, null, 2), 'utf-8');
+  return manifestJson;
 }
 
-transformManifest();
-
-const html = ejs.render(template, pageConfig);
-
-/** build actions */
-console.log('build starting');
-// 创建 build 文件夹, 并将运行时依赖文件移动到 build 文件夹下
-const buildPath = './build';
-
-try {
-  fs.rmSync('./build', { recursive: true });
-} catch (error) {
-  if (error.code !== 'ENOENT') {
-    throw error;
-  }
+async function writeFileToTheBuildFolder(filename, content) {
+  console.log('---- 向 build 文件夹中写入文件: ', filename, ' ----');
+  const targetFilename = path.resolve(buildFolderPath, filename);
+  await fs.promises.writeFile(targetFilename, content, 'utf-8');
 }
-fs.mkdirSync('./build');
-fs.writeFileSync(`${buildPath}/install.html`, html, 'utf-8');
-['./manifest.json', './service-worker.js', './index.html'].forEach(path =>
-  fs.copyFileSync(path, `${buildPath}/${path}`),
-);
-['./css', './img', './js'].forEach(path => copyDir(path, `${buildPath}/${path}`));
-// 将模板生成到 build 文件夹下
-console.log('build success');
 
-function copyDir(originPath, targetPath) {
-  fs.mkdirSync(targetPath, { recursive: true });
+async function copyFilesToTheBuildFolder(dirname) {
+  console.log('---- 向 build 文件夹写入文件夹内容: ', dirname, ' ----');
+  const originDirname = path.resolve(__dirname, dirname);
+  const targetDirname = path.resolve(buildFolderPath, dirname);
+  await fs.promises.mkdir(targetDirname, { recursive: true });
 
-  const files = fs.readdirSync(originPath);
-  files.forEach(file => {
-    const originFilePath = path.join(originPath, file);
-    const targetFilePath = path.join(targetPath, file);
-
-    const stats = fs.statSync(originFilePath);
-    if (stats.isDirectory()) {
-      copyDir(originFilePath, targetFilePath);
+  const files = await fs.promises.readdir(originDirname);
+  return files?.map(async filename => {
+    const originFilename = path.resolve(originDirname, filename);
+    const targetFilename = path.resolve(targetDirname, filename);
+    const stat = await fs.promises.stat(targetFilename);
+    if (stat.isDirectory()) {
+      await copyFilesToTheBuildFolder(originFilename);
     } else {
-      fs.copyFileSync(originFilePath, targetFilePath);
+      await fs.promises.copyFile(originFilename, targetFilename);
     }
   });
 }
+
+(async function () {
+  const templateFilename = path.resolve(__dirname, 'template.ejs');
+  const webPushFilename = path.resolve(__dirname, 'js/web-push.js');
+  const staticResources = ['service-worker.js', 'css', 'img', 'js', 'game'];
+
+  const [htmlTemplate, webPushTemplate, manifestJson] = await Promise.all([
+    fs.promises.readFile(templateFilename, 'utf-8'),
+    fs.promises.readFile(webPushFilename, 'utf-8'),
+    transformManifest(),
+  ]);
+
+  // 渲染模板
+  const installHtml = ejs.render(htmlTemplate, pageConfig);
+  const webPushJs = ejs.render(webPushTemplate, pageConfig);
+
+  /** build actions */
+  console.log('build starting');
+  // 创建 build 文件夹, 并将运行时依赖文件添加到 build 文件夹下
+  const buildPath = path.resolve(__dirname, 'build');
+
+  try {
+    console.log('---- 删除旧的 build 文件夹 ----');
+    await fs.promises.rm(buildPath, { recursive: true });
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+  }
+
+  console.log('---- 创建新的 build 文件夹 ----');
+  await fs.promises.mkdir(buildPath);
+
+  await Promise.all([
+    writeFileToTheBuildFolder('install.html', installHtml),
+    writeFileToTheBuildFolder('web-push.js', webPushJs),
+    writeFileToTheBuildFolder('manifest.json', JSON.stringify(manifestJson)),
+    staticResources.map(filename => copyFilesToTheBuildFolder(filename)),
+  ]);
+})();

@@ -83,7 +83,7 @@
 
       // 如果已经安装，则打开应用
       if (getAppIsInstalled()) {
-        win.open('./index.html');
+        win.open('./game/index.html');
         return;
       }
 
