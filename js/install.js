@@ -103,6 +103,8 @@
         });
       }
     }
+
+    win.handleButtonClick = handleButtonClick;
   });
 
   win.addEventListener('beforeinstallprompt', function (event) {
