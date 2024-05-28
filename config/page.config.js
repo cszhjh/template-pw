@@ -4,6 +4,8 @@ module.exports = {
   vapidPublicKey:
     'BKYZymBADeV_ItcbBdi4XmkeKC1SACgr4AGBmN2qK3e_PJT9QfwaWRfBjgHvT4x7kNthYT3RqleWT6G6pC2SdaU',
 
+  showGoogleInfo: false,
+
   // apk下载地址
   redirect: 'https://cdn.onecrashjogo.us/apk/BrazilApk/plinkodl_internal.apk',
 
