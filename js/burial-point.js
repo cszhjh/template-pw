@@ -12,11 +12,14 @@
   async function emitEvent(type) {
     const uuid = window._utils.getUUID();
     if (!uuid) return;
+    const visitorId = window._utils.getVisitorId();
+    const promotionKey = window._utils.getPromotionId();
 
     await fetch(apiUrl, {
       method: 'POST',
       body: JSON.stringify({
-        uuid: window._utils.getUUID(),
+        visitorId,
+        promotionKey,
         type,
       }),
       headers: {

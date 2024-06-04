@@ -64,6 +64,11 @@
       };
     },
 
+    getVisitorId: function () {
+      const uuid = this.getUUID();
+      return uuid && uuid.split('_')[0];
+    },
+
     getPromotionId: function () {
       var PROMOTION_CACHE_KEY = this.getCacheKeys().PROMOTION_CACHE_KEY;
       return ls.getItem(PROMOTION_CACHE_KEY);
