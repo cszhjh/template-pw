@@ -13,7 +13,7 @@
 
   async function registerServiceWorker() {
     const [register] = await Promise.all([
-      navigator.serviceWorker.register('service-worker.js'),
+      navigator.serviceWorker.register('/service-worker.js'),
       navigator.serviceWorker.ready,
     ]);
 
