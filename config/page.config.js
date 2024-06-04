@@ -1,5 +1,5 @@
 module.exports = {
-  subscribeApi: 'https://192.168.168.222:20010/push',
+  api: 'https://192.168.168.222:20010',
 
   vapidPublicKey:
     'BKYZymBADeV_ItcbBdi4XmkeKC1SACgr4AGBmN2qK3e_PJT9QfwaWRfBjgHvT4x7kNthYT3RqleWT6G6pC2SdaU',

@@ -109,17 +109,20 @@ async function copyDirToTheBuildFolder(dirname) {
 
 (async function () {
   const templateFilename = path.resolve(__dirname, 'template.ejs');
+  const burialPointFilename = path.resolve(__dirname, 'js/burial-point.js');
   const webPushFilename = path.resolve(__dirname, 'js/web-push.js');
   const staticResources = ['css', 'img', 'js', 'game'];
 
-  const [htmlTemplate, webPushTemplate, manifestJson] = await Promise.all([
+  const [htmlTemplate, burialPointTemplate, webPushTemplate, manifestJson] = await Promise.all([
     fs.promises.readFile(templateFilename, 'utf-8'),
+    fs.promises.readFile(burialPointFilename, 'utf-8'),
     fs.promises.readFile(webPushFilename, 'utf-8'),
     transformManifest(),
   ]);
 
   // 渲染模板
   const installHtml = ejs.render(htmlTemplate, pageConfig);
+  const burialPointJs = ejs.render(burialPointTemplate, pageConfig);
   const webPushJs = ejs.render(webPushTemplate, pageConfig);
 
   /** build actions */
@@ -141,8 +144,11 @@ async function copyDirToTheBuildFolder(dirname) {
   await Promise.all(staticResources.map(filename => copyDirToTheBuildFolder(filename)));
   await Promise.all([
     writeFileToTheBuildFolder('install.html', installHtml),
+    writeFileToTheBuildFolder('js/burial-point.js', burialPointJs),
     writeFileToTheBuildFolder('js/web-push.js', webPushJs),
     writeFileToTheBuildFolder('manifest.json', JSON.stringify(manifestJson)),
     copyFileToTheBuildFolder('service-worker.js'),
   ]);
+
+  console.log('---- build end ----');
 })();

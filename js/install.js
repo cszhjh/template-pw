@@ -96,6 +96,9 @@
         promptEvent.prompt();
         promptEvent.userChoice.then(function (choiceResult) {
           if (choiceResult.outcome === 'accepted') {
+            // 发送安装事件
+            window._events && window._events.installed();
+
             install();
             win.deferedPrompt = null;
             ls.setItem('installed', 'true');

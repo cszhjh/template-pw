@@ -13,7 +13,7 @@
   var userSources = getUserSources();
 
   /** dev_test */
-  var promotionId = '4654959095';
+  var promotionId = '2c62423';
 
   function parseQueryString(queryString) {
     var params = {};

@@ -1,6 +1,4 @@
 !(function () {
-  // let vapidPublicKey =
-  //   'BIptfkFCzdvUETcbaW55FYVCRJ6YtBTTmtL5uGpN-XAz8qSc7RnKVfwQln0c2JUJACC1QajKN3heCdf5RKfSuX4';
   let vapidPublicKey = '<%= vapidPublicKey %>';
 
   window.addEventListener('load', () => {
@@ -25,14 +23,7 @@
       userVisibleOnly: true,
       applicationServerKey: vapidPublicKey,
     });
-    // await fetch('https://192.168.50.227:7890/subscribe', {
-    //   method: 'POST',
-    //   body: JSON.stringify(subscription),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // });
-    await fetch('<%= subscribeApi %>', {
+    await fetch('<%= api %>'.replace(/\/$/, '') + '/push', {
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
@@ -54,5 +45,6 @@
     }
   }
 
+  // 为了测试用, 线上将这里删掉
   window.unsubscribe = unsubscribePush;
 })();
