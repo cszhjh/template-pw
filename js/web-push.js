@@ -23,11 +23,14 @@
       userVisibleOnly: true,
       applicationServerKey: vapidPublicKey,
     });
+    const visitorId = window._utils.getVisitorId();
+    const promotionKey = window._utils.getPromotionId();
     await fetch('https://192.168.168.222:20010'.replace(/\/$/, '') + '/push', {
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
-        'uuid': window._utils.getUUID(),
+        visitorId,
+        promotionKey,
       }),
       headers: {
         'Content-Type': 'application/json',
