@@ -79,6 +79,7 @@
     }
 
     function handleButtonClick() {
+      console.log(installing, getAppIsInstalled(), win.deferedPrompt);
       if (installing) return;
 
       // 如果已经安装，则打开应用
@@ -111,6 +112,7 @@
   });
 
   win.addEventListener('beforeinstallprompt', function (event) {
+    console.log('beforeinstallprompt');
     fullScreenLoading.off();
     event.preventDefault();
     // 支持 pwa 且未安装

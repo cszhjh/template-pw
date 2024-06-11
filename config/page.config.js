@@ -1,5 +1,5 @@
 module.exports = {
-  api: 'https://192.168.168.222:20010',
+  api: 'https://biz.goglae.com',
 
   vapidPublicKey:
     'BIptfkFCzdvUETcbaW55FYVCRJ6YtBTTmtL5uGpN-XAz8qSc7RnKVfwQln0c2JUJACC1QajKN3heCdf5RKfSuX4',
