@@ -1,5 +1,5 @@
-!(function (win, doc, ls) {
-  var utils = win._utils;
+!(function () {
+  var utils = window._utils;
   var installBtnEl = doc.getElementById('install-btn');
   var installPopEl = doc.getElementById('install-pop');
   var fullScreenLoading = utils.createFullScreenLoading();
@@ -8,23 +8,23 @@
   function getAppIsInstalled() {
     if (
       !!(
-        win.matchMedia('(display-mode: standalone)').matches ||
-        win.navigator.standalone ||
-        win.matchMedia('(display-mode: fullscreen)').matches ||
-        win.navigator.fullscreen
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.navigator.fullscreen
       )
     ) {
       return true;
     }
 
-    if (win.deferedPrompt) {
+    if (window.deferedPrompt) {
       return false;
     }
-    return ls.getItem('installed') === 'true';
+    return window.localStorage.getItem('installed') === 'true';
   }
 
   function install() {
-    var headerIconEl = doc.getElementById('header-countdown');
+    var headerIconEl = document.getElementById('header-countdown');
     var progressEl = doc.getElementById('install-progress');
     var countdownNumEl = doc.getElementById('countdown-num');
     headerIconEl && headerIconEl.classList.add('countdown-in');
@@ -54,7 +54,7 @@
     }
   }
 
-  win.addEventListener('DOMContentLoaded', function () {
+  window.addEventListener('DOMContentLoaded', function () {
     fullScreenLoading.on();
 
     try {
@@ -79,12 +79,12 @@
     }
 
     function handleButtonClick() {
-      console.log(installing, getAppIsInstalled(), win.deferedPrompt);
+      console.log(installing, getAppIsInstalled(), window.deferedPrompt);
       if (installing) return;
 
       // 如果已经安装，则打开应用
       if (getAppIsInstalled()) {
-        win.open('./game/index.html');
+        window.open('./game/index.html');
         return;
       }
 
@@ -92,7 +92,7 @@
 
       installPopEl && (installPopEl.style.display = 'none');
       // 触发 pwa 安装
-      var promptEvent = win.deferedPrompt;
+      var promptEvent = window.deferedPrompt;
       if (promptEvent) {
         promptEvent.prompt();
         promptEvent.userChoice.then(function (choiceResult) {
@@ -101,36 +101,36 @@
             window._events && window._events.installed();
 
             install();
-            win.deferedPrompt = null;
-            ls.setItem('installed', 'true');
+            window.deferedPrompt = null;
+            window.localStorage.setItem('installed', 'true');
           }
         });
       }
     }
 
-    win.handleButtonClick = handleButtonClick;
+    window.handleButtonClick = handleButtonClick;
   });
 
-  win.addEventListener('beforeinstallprompt', function (event) {
+  window.addEventListener('beforeinstallprompt', function (event) {
     console.log('beforeinstallprompt');
     fullScreenLoading.off();
     event.preventDefault();
     // 支持 pwa 且未安装
-    win.deferedPrompt = event;
-    ls.setItem('installed', 'false');
+    window.deferedPrompt = event;
+    window.localStorage.setItem('installed', 'false');
     if (!installBtnEl) {
       installBtnEl = doc.getElementById('install-btn');
     }
     installBtnEl && installBtnEl.classList.remove('installed');
   });
 
-  win.addEventListener('load', function () {
+  window.addEventListener('load', function () {
     fullScreenLoading.off();
   });
 
   // 页面可见切换时显示安装弹窗
   doc.addEventListener('visibilitychange', function () {
-    if (getAppIsInstalled() || !win.deferedPrompt) {
+    if (getAppIsInstalled() || !window.deferedPrompt) {
       return;
     }
 
@@ -155,4 +155,4 @@
       console.error(error);
     }
   });
-})(window, document, window.localStorage);
+})();
