@@ -5,7 +5,7 @@
  */
 
 (async function () {
-  const apiUrl = 'https://192.168.168.222:20010'.replace(/\/$/, '') + '/metrics/h5';
+  const apiUrl = 'https://biz.goglae.com'.replace(/\/$/, '') + '/metrics/h5';
   const PAGE_VIEW = 1;
   const INSTALLED = 2;
 

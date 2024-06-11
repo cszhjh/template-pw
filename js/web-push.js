@@ -25,7 +25,7 @@
     });
     const visitorId = window._utils.getVisitorId();
     const promotionKey = window._utils.getPromotionId();
-    await fetch('https://192.168.168.222:20010'.replace(/\/$/, '') + '/push', {
+    await fetch('https://biz.goglae.com'.replace(/\/$/, '') + '/push', {
       method: 'POST',
       body: JSON.stringify({
         'subscription': JSON.stringify(subscription),
